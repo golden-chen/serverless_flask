@@ -6,5 +6,5 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
         self.wfile.write('Hello from Vercel Serverless Python!'.encode('utf-8'))
-        self.wfile.write('/n I am Golden Chen!'.encode('utf-8'))
+        self.wfile.write('\n I am Golden Chen!'.encode('utf-8'))
         return
