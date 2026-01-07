@@ -6,12 +6,17 @@
 <body>
     <h1>我的第一個 Serverless 專案</h1>
     <button onclick="callBackend()">點我呼叫後端 API</button>
-    
+    <button onclick="callBackend1()">Weather API</button>
     <p>後端回應：<span id="result">等待中...</span></p>
 
     <script>
         async function callBackend() {
             const res = await fetch('/api/hello'); // 呼叫你的 py 檔
+            const text = await res.text();
+            document.getElementById('result').innerText = text;
+        }
+        async function callBackend1() {
+            const res = await fetch('/api/weather'); // 呼叫你的 py 檔
             const text = await res.text();
             document.getElementById('result').innerText = text;
         }
