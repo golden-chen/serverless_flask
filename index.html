@@ -20,6 +20,12 @@
             const text = await res.text();
             document.getElementById('result').innerText = text;
         }
+        async function callBackend2() {
+            const userName = prompt("請輸入你的名字："); // 彈窗問名字
+            const res = await fetch(`/api/query?name=${userName}`); 
+            const text = await res.text();
+            document.getElementById('result').innerText = text;
+        }
     </script>
 </body>
 </html>
