@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask 路由診斷工具</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .button-group { margin-bottom: 20px; }
+        button { padding: 10px 15px; cursor: pointer; margin-right: 10px; }
+        #log { background: #f4f4f4; padding: 15px; border-radius: 5px; border: 1px solid #ddd; min-height: 50px; white-space: pre-wrap; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Vercel + Flask 診斷工具</h1>
+    <p>請依序點擊下方按鈕，觀察下方的「實際路徑」回應：</p>
+
+    <div class="button-group">
+        <button onclick="testRoute('/api')">測試 1: /api</button>
+        <button onclick="testRoute('/api/hello')">測試 2: /api/hello</button>
+        <button onclick="testRoute('/api/test/123')">測試 3: /api/test/123</button>
+    </div>
+
+    <div>
+        <h3>後端回應結果：</h3>
+        <div id="log">等待點擊按鈕...</div>
+    </div>
+
+    <script>
+        async function testRoute(url) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerText = `正在請求: ${url} ...`;
+            
+            try {
+                const res = await fetch(url);
+                const text = await res.text();
+                
+                if (res.ok) {
+                    logDiv.innerHTML = `<span class="success">成功！</span>\n後端收到的路徑是：\n${text}`;
+                } else {
+                    logDiv.innerHTML = `<span class="error">失敗 (HTTP ${res.status})</span>\n回應內容：\n${text}`;
+                }
+            } catch (err) {
+                logDiv.innerHTML = `<span class="error">網路錯誤</span>\n${err.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
