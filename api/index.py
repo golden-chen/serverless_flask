@@ -1,7 +1,9 @@
 from flask import Flask, request
 
 app = Flask(__name__)
-
+@app.route('/')
+def serve_index():
+    return "這是 API 節點，請從主網頁進入。"
 # 支援訪問 /api 和 /api/
 @app.route('/api')
 @app.route('/api/')
