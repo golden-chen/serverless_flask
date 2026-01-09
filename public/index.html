@@ -10,7 +10,7 @@
     <p>請依序點擊下方按鈕，觀察下方的「實際路徑」回應：</p>
 
     <div class="button-group">
-        <button onclick="testRoute('/api/weather')">測試 1: /api/weather</button>
+        <button onclick="testRoute('/api/weather0')">測試 1: /api/weather</button>
         <button onclick="testRoute('/api/hello')">測試 2: /api/hello</button>
         <button onclick="testRoute('/api/test/123')">測試 3: /api/test/123</button>
     </div>
@@ -19,8 +19,35 @@
         <h3>後端回應結果：</h3>
         <div id="log">等待點擊按鈕...</div>
     </div>
+<hr>
+<h3>微服務 2：即時天氣查詢</h3>
+<button onclick="fetchWeather()">查詢台北天氣</button>
+<div id="weatherResult"></div>
 
-    <script>
+<script>
+    async function fetchWeather() {
+        const display = document.getElementById('weatherResult');
+        display.innerText = "查詢中...";
+        
+        try {
+            // 呼叫你的微服務
+            const res = await fetch('/api/weather');
+            const data = await res.json();
+            
+            if (data.error) {
+                display.innerText = "查詢失敗: " + data.error;
+            } else {
+                display.innerHTML = `
+                    <p>城市：${data.city}</p>
+                    <p>溫度：<b>${data.temperature}</b></p>
+                    <p>狀態：${data.description}</p>
+                `;
+            }
+        } catch (err) {
+            display.innerText = "發生錯誤：" + err;
+        }
+    }
+
         async function testRoute(url) {
             const logDiv = document.getElementById('log');
             logDiv.innerText = `正在請求: ${url} ...`;
