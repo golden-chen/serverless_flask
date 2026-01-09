@@ -4,8 +4,42 @@
 數字 B: <input type="number" id="numB" value="20">
 <button onclick="calculate()">計算加法</button>
 <p id="calcResult"></p>
+<br>
+<hr>
+<h1>Vercel + Flask 診斷工具</h1>
+    <p>請依序點擊下方按鈕，觀察下方的「實際路徑」回應：</p>
 
-<script>
+    <div class="button-group">
+        <button onclick="testRoute('/api/weather')">測試 1: /api/weather</button>
+        <button onclick="testRoute('/api/hello')">測試 2: /api/hello</button>
+        <button onclick="testRoute('/api/test/123')">測試 3: /api/test/123</button>
+    </div>
+
+    <div>
+        <h3>後端回應結果：</h3>
+        <div id="log">等待點擊按鈕...</div>
+    </div>
+
+    <script>
+        async function testRoute(url) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerText = `正在請求: ${url} ...`;
+            
+            try {
+                const res = await fetch(url);
+                const text = await res.text();
+                
+                if (res.ok) {
+                    logDiv.innerHTML = `<span class="success">成功！</span>\n後端收到的路徑是：\n${text}`;
+                } else {
+                    logDiv.innerHTML = `<span class="error">失敗 (HTTP ${res.status})</span>\n回應內容：\n${text}`;
+                }
+            } catch (err) {
+                logDiv.innerHTML = `<span class="error">網路錯誤</span>\n${err.message}`;
+            }
+        }
+    
+
     async function calculate() {
         const a = document.getElementById('numA').value;
         const b = document.getElementById('numB').value;
