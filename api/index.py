@@ -1,4 +1,5 @@
-from flask import Flask, request
+from flask import Flask, jsonify, request
+from api.weather import get_taipei_weather # 匯入剛才寫的功能
 
 app = Flask(__name__)
 
@@ -26,6 +27,13 @@ def add_numbers():
     a = request.args.get('a', 0, type=int)
     b = request.args.get('b', 0, type=int)
     result = a + b
-    return f"計算結果：{a} + {b} = {result}"    
+    return f"計算結果：{a} + {b} = {result}"  
+@app.route('/api/weather')
+def weather_api():
+    try:
+        data = get_taipei_weather()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500    
 if __name__ == "__main__":
     app.run()
