@@ -19,6 +19,7 @@ def say_hello():
 def say_hello1():
     name = request.args.get('name', 'golden')
     return f"嗨 {name}，這是在 Vercel 123 test 回傳的！"
+@app.route('/api/add')
 @app.route('/add')
 def add_numbers():
     # 接收前端傳來的 a 和 b
