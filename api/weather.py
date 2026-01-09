@@ -1,31 +1,35 @@
 import requests
 from flask import Flask, jsonify
 
-# 注意：如果是在 Vercel 的獨立檔案，建議還是用 Flask 處理會方便很多
 app = Flask(__name__)
 
+# 注意：這裡的路由要對應檔案名稱，或者用萬用匹配
 @app.route('/api/weather')
 def get_weather():
     try:
-        # 1. 呼叫外部的氣象服務 (wttr.in) 抓取台北的天氣，格式設定為 JSON
-        # ?format=j1 是 wttr.in 的 JSON 格式參數
+        # 抓取氣象資料
         response = requests.get("https://wttr.in/Taipei?format=j1")
+        # 檢查外部 API 是否成功
+        if response.status_code != 200:
+            return jsonify({"error": "外部 API 暫時無法連線"}), 503
+            
         data = response.json()
         
-        # 2. 從複雜的資料中提取我們要的：當前氣溫與天氣描述
+        # 提取資料
         current = data['current_condition'][0]
-        temp = current['temp_C']
-        desc = current['weatherDesc'][0]['value']
-        
-        return {
+        result = {
             "city": "台北",
-            "temperature": f"{temp}°C",
-            "description": desc,
-            "source": "wttr.in"
+            "temperature": f"{current['temp_C']}°C",
+            "description": current['weatherDesc'][0]['value'],
+            "humidity": f"{current['humidity']}%"
         }
+        
+        # 強制以 JSON 格式回傳
+        return jsonify(result)
+        
     except Exception as e:
-        return {"error": str(e)}, 500
+        return jsonify({"error": str(e)}), 500
 
-# 為了讓 Vercel 識別這個檔案的進入點
+# 這行是關鍵：讓 Vercel 啟動 Flask
 def handler(request):
     return app(request)
